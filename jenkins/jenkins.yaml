@@ -1,0 +1,39 @@
+jenkins:
+  systemMessage: "AWS Academy Jenkins"
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      enableCaptcha: false
+      users:
+        - id: jedi
+          password: ${JEDI_PASSWORD}
+        - id: padawan
+          password: ${PADAWAN_PASSWORD}
+
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+          - name: admin
+            permissions:
+              - Overall/Administer
+            entries:
+              - user: jedi
+
+          - name: student
+            permissions:
+              - Overall/Read
+              - Job/Read
+              - Job/Build
+              - Job/Configure
+              - Job/Create
+              - Job/Delete
+            entries:
+              - user: padawan
+
+unclassified:
+  gitSCM:
+    globalConfigName: "Jenkins"
+    globalConfigEmail: "jenkins@example.com"
+    allowLocalCheckout: true
