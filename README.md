@@ -1,12 +1,14 @@
 # ffit-lu01-build-environment
 
+### Diagram of the build environment
+
 https://viewer.diagrams.net/?url=https://raw.githubusercontent.com/AlexanderPeter/ffit-lu01-build-environment/refs/heads/master/diagram_build_environment.drawio
 
-<html>
-<iframe 
-  src="https://viewer.diagrams.net/?url=https://raw.githubusercontent.com/AlexanderPeter/ffit-lu01-build-environment/refs/heads/master/diagram_build_environment.drawio"
-  width="100%"
-  height="600"
-  frameborder="0">
-</iframe>
-</html>
+### Setting up the build environment in a new instance
+
+```bash
+sudo dnf install git -y
+git clone https://github.com/AlexanderPeter/ffit-lu01-build-environment
+cd ffit-lu01-build-environment
+sh initial-setup.sh
+```

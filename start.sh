@@ -30,6 +30,19 @@ docker run -d \
   -e JENKINS_OPTS="--prefix=/jenkins" \
   jenkins/jenkins:lts
 
+echo "== Start SonarQube =="
+docker rm -f sonarqube >/dev/null 2>&1 || true
+docker run -d \
+  --name sonarqube \
+  --network infra-net \
+  -p 127.0.0.1:9000:9000 \
+  --env-file .env \
+  -e SONAR_WEB_CONTEXT=/sonarqube \
+  -v sonarqube_data:/opt/sonarqube/data \
+  -v sonarqube_extensions:/opt/sonarqube/extensions \
+  -v sonarqube_logs:/opt/sonarqube/logs \
+  sonarqube:lts
+
 echo "== Start Nginx =="
 docker rm -f nginx >/dev/null 2>&1 || true
 docker run -d \
