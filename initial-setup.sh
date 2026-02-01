@@ -34,5 +34,8 @@ mkdir -p \
   $(pwd)/jenkins \
   $(pwd)/nginx/html
 
+echo "== Build Jenkins docker file =="
+docker build -t my-jenkins ./jenkins
+
 echo "== Completed initial setup =="
 echo "Please logout & login again to apply Docker group changes."

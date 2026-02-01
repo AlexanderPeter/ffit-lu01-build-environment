@@ -21,14 +21,14 @@ docker run -d \
   --name jenkins \
   --network infra-net \
   -p 127.0.0.1:8080:8080 \
-  -p 127.0.0.1:50000:50000 \
   --env-file .env \
   -v jenkins_home:/var/jenkins_home \
-  -v $(pwd)/jenkins/jenkins.yaml:/var/jenkins_home/jenkins.yaml:ro \
   -e CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml \
   -e JAVA_OPTS="-Djenkins.install.runSetupWizard=false" \
   -e JENKINS_OPTS="--prefix=/jenkins" \
-  jenkins/jenkins:lts
+  my-jenkins
+docker exec jenkins git config --global --add safe.directory '*'
+
 
 echo "== Start SonarQube =="
 docker rm -f sonarqube >/dev/null 2>&1 || true

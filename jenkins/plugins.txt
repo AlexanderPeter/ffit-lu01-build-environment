@@ -1,5 +1,5 @@
-configuration-as-code
 git
 workflow-aggregator
 role-strategy
 docker-workflow
+credentials

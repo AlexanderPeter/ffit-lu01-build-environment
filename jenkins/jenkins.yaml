@@ -31,9 +31,3 @@ jenkins:
               - Job/Delete
             entries:
               - user: padawan
-
-unclassified:
-  gitSCM:
-    globalConfigName: "Jenkins"
-    globalConfigEmail: "jenkins@example.com"
-    allowLocalCheckout: true
