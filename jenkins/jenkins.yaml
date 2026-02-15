@@ -1,14 +1,14 @@
 jenkins:
-  systemMessage: "AWS Academy Jenkins"
+  systemMessage: "FFIT Jenkins"
 
   securityRealm:
     local:
       allowsSignup: false
       enableCaptcha: false
       users:
-        - id: jedi
+        - id: ${JEDI_USERNAME}
           password: ${JEDI_PASSWORD}
-        - id: padawan
+        - id: ${PADAWAN_USERNAME}
           password: ${PADAWAN_PASSWORD}
 
   authorizationStrategy:
@@ -19,7 +19,7 @@ jenkins:
             permissions:
               - Overall/Administer
             entries:
-              - user: jedi
+              - user: ${JEDI_USERNAME}
 
           - name: student
             permissions:
@@ -30,4 +30,13 @@ jenkins:
               - Job/Create
               - Job/Delete
             entries:
-              - user: padawan
+              - user: ${PADAWAN_USERNAME}
+  credentials:
+    system:
+      domainCredentials:
+        - credentials:
+            - string:
+                scope: GLOBAL
+                id: sonar-token
+                description: "SonarQube CI Token"
+                secret: "${SONAR_TOKEN}"
