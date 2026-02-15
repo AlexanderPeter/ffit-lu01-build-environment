@@ -29,11 +29,11 @@ for v in sonarqube_data sonarqube_extensions sonarqube_logs sonarqube_db jenkins
   docker volume inspect $v >/dev/null 2>&1 || docker volume create $v
 done
 
+./nginx/start-nginx.sh
 ./sonarqube/start-sonarqube.sh
 ./sonarqube/setup-sonarqube.sh
 ./jenkins/setup-jenkins.sh
 ./jenkins/start-jenkins.sh
-./nginx/start-nginx.sh
 until docker exec jenkins true; do sleep 2; done
 docker exec jenkins git config --global --add safe.directory '*'
 

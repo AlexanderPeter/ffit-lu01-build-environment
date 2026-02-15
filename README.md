@@ -10,5 +10,6 @@ https://viewer.diagrams.net/?url=https://raw.githubusercontent.com/AlexanderPete
 sudo dnf install git -y
 git clone https://github.com/AlexanderPeter/ffit-lu01-build-environment
 cd ffit-lu01-build-environment
-sh initial-setup.sh
+find . -type f -name "*.sh" -exec chmod +x {} +
+sh setup.sh
 ```
