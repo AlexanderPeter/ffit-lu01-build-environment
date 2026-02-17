@@ -10,9 +10,10 @@ TOKEN_FILE="$SCRIPT_DIR/token.txt"
 ### Load .env if present
 if [ -f "$ROOT_DIR/.env" ]; then
   echo "== Loading .env file =="
-  set -a
-  source "$ROOT_DIR/.env"
-  set +a
+  while IFS='=' read -r key value; do
+    [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
+    export "$key=$value"
+  done < "$ROOT_DIR/.env"
 fi
 echo "DEBUG username is: $SONAR_ADMIN_USERNAME"
 echo "DEBUG password is: $SONAR_ADMIN_PASSWORD"
@@ -45,9 +46,11 @@ DEFAULT_AUTH=$(curl -s -u admin:admin \
 
 if echo "$DEFAULT_AUTH" | jq -e '.valid == true' >/dev/null; then
   echo "== Default admin password detected, changing password =="
-  curl -sf -X POST "$SONAR_URL/api/users/change_password" \
-    -u admin:admin \
-    -d "login=$SONAR_ADMIN_USERNAME&password=$SONAR_ADMIN_PASSWORD"
+  curl -f -X POST "$SONAR_URL/api/users/change_password" \
+  -u admin:admin \
+  --data-urlencode "login=admin" \
+  --data-urlencode "previousPassword=admin" \
+  --data-urlencode "password=$SONAR_ADMIN_PASSWORD"
   echo "== Admin password changed successfully =="
 else
   echo "== Default admin password already changed =="
@@ -80,22 +83,19 @@ if [ -z "${PADAWAN_PASSWORD:-}" ]; then
   exit 1
 fi
 
-USER_EXISTS=$(curl -s -u "$SONAR_ADMIN_USERNAME:$SONAR_ADMIN_PASSWORD" \
-  "$SONAR_URL/api/users/search?login=$PADAWAN_USERNAME" \
-  | jq -r '.users | length')
+PADAWAN_AUTH=$(curl -s -u "$PADAWAN_USERNAME:$PADAWAN_PASSWORD" \
+  "$SONAR_URL/api/authentication/validate")
 
-if [ "$USER_EXISTS" -eq 0 ]; then
-  echo "== Creating CI user $PADAWAN_USERNAME =="
-  curl -s -u "$SONAR_ADMIN_USERNAME:$SONAR_ADMIN_PASSWORD" \
-    -X POST "$SONAR_URL/api/users/create" \
-    -d "login=$PADAWAN_USERNAME&name=Padawan&password=$PADAWAN_PASSWORD"
-else
+if echo "$PADAWAN_AUTH" | jq -e '.valid == true' >/dev/null; then
   echo "== CI user $PADAWAN_USERNAME already exists =="
+else
+  echo "== Creating CI user $PADAWAN_USERNAME =="
+  curl -sf -u "$SONAR_ADMIN_USERNAME:$SONAR_ADMIN_PASSWORD" \
+  -X POST "$SONAR_URL/api/users/create" \
+  --data-urlencode "login=$PADAWAN_USERNAME" \
+  --data-urlencode "name=$PADAWAN_USERNAME" \
+  --data-urlencode "password=$PADAWAN_PASSWORD"
 fi
-
-curl -s -u "$SONAR_ADMIN_USERNAME:$SONAR_ADMIN_PASSWORD" \
-  -X POST "$SONAR_URL/api/user_groups/add_user" \
-  -d "login=$PADAWAN_USERNAME&name=sonar-users"
 
 ### Generate token if missing
 if [ ! -s "$TOKEN_FILE" ]; then

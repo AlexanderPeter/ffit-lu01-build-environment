@@ -1,4 +1,7 @@
-export SONAR_TOKEN=$(cat ../sonarqube/token.txt)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+TOKEN_FILE="$SCRIPT_DIR/../sonarqube/token.txt"
+
+export SONAR_TOKEN=$(cat "$TOKEN_FILE")
 echo "DEBUG token is: $SONAR_TOKEN"
 
 ### Validate required username
