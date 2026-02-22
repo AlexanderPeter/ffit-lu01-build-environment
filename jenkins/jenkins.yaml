@@ -31,12 +31,29 @@ jenkins:
               - Job/Delete
             entries:
               - user: ${PADAWAN_USERNAME}
-  credentials:
-    system:
-      domainCredentials:
-        - credentials:
-            - string:
-                scope: GLOBAL
-                id: sonar-token
-                description: "SonarQube CI Token"
-                secret: "${SONAR_TOKEN}"
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - string:
+              id: sonar-token
+              scope: GLOBAL
+              secret: "${SONAR_TOKEN}"
+
+unclassified:
+  sonarGlobalConfiguration:
+    installations:
+      - name: "SonarQube"
+        serverUrl: "http://sonarqube:9000"
+        credentialsId: "sonar-token"
+
+tool:
+  sonarRunnerInstallation:
+    installations:
+      - name: "sonar-scanner"
+        properties:
+          - installSource:
+              installers:
+                - sonarRunnerInstaller:
+                    id: "5.0.1.3006"

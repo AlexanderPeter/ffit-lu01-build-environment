@@ -3,3 +3,4 @@ workflow-aggregator
 role-strategy
 docker-workflow
 credentials
+sonar

@@ -6,6 +6,8 @@ docker run -d \
   --name nginx \
   --network infra-net \
   -p 80:80 \
+  --memory=64m \
+  --memory-swap=64m \
   -v "$SCRIPT_DIR/default.conf:/etc/nginx/conf.d/default.conf:ro" \
   -v "$SCRIPT_DIR/html:/var/www/html:ro" \
   -v jenkins_home:/var/jenkins_home:ro \
