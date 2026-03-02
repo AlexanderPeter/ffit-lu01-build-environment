@@ -5,7 +5,7 @@ docker rm -f sonarqube >/dev/null 2>&1 || true
 docker run -d \
   --name sonarqube \
   --network infra-net \
-  -p 127.0.0.1:9000:9000 \
+  -p 9000:9000 \
   --memory=3g \
   --memory-swap=3g \
   --env-file "$SCRIPT_DIR/../.env" \

@@ -17,12 +17,13 @@ docker run -d \
   --name jenkins \
   --network infra-net \
   -p 127.0.0.1:8080:8080 \
-  --memory=768m \
-  --memory-swap=768m \
+  --memory=1536m \
+  --memory-swap=1536m \
   --env-file "$SCRIPT_DIR/../.env" \
   -e SONAR_TOKEN="$SONAR_TOKEN" \
   -e CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml \
-  -e JAVA_OPTS="-Djenkins.install.runSetupWizard=false" \
+  -e JAVA_OPTS="-Xms512m -Xmx768m -Djenkins.install.runSetupWizard=false" \
   -e JENKINS_OPTS="--prefix=/jenkins" \
   -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
   my-jenkins

@@ -45,7 +45,7 @@ unclassified:
   sonarGlobalConfiguration:
     installations:
       - name: "SonarQube"
-        serverUrl: "http://sonarqube:9000"
+        serverUrl: "http://sonarqube:9000/sonarqube"
         credentialsId: "sonar-token"
 
 tool:
