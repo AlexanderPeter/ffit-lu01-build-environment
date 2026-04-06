@@ -34,7 +34,5 @@ done
 ./jenkins/setup-jenkins.sh
 ./jenkins/start-jenkins.sh
 ./nginx/start-nginx.sh
-until docker exec jenkins true; do sleep 2; done
-docker exec jenkins git config --global --add safe.directory '*'
 
 

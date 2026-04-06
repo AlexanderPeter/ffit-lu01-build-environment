@@ -1,21 +1,31 @@
 FROM jenkins/jenkins:lts
 
-# System-Setup (root)
 USER root
 
+# Basis-Tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         curl \
-        ca-certificates && \
+        ca-certificates \
+        docker.io \
+        docker-cli && \
     rm -rf /var/lib/apt/lists/*
 
+# Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get update && \
-    apt-get install -y --no-install-recommends nodejs && \
-    node -v && npm -v && \
+    apt-get install -y --no-install-recommends \
+        nodejs && \
+        node -v && npm -v && \
     rm -rf /var/lib/apt/lists/*
 
-# Jenkins-Konfiguration
+# Docker-Group
+RUN groupadd -f docker && usermod -aG docker jenkins
+
+# Git Safe Directory
+RUN git config --system --add safe.directory '*'
+
+# Jenkins Setup
 USER jenkins
 
 RUN jenkins-plugin-cli --plugins configuration-as-code

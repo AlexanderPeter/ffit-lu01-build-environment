@@ -17,8 +17,8 @@ docker run -d \
   --name jenkins \
   --network infra-net \
   -p 127.0.0.1:8080:8080 \
-  --memory=1536m \
-  --memory-swap=1536m \
+  --memory=3g \
+  --memory-swap=3g \
   --env-file "$SCRIPT_DIR/../.env" \
   -e SONAR_TOKEN="$SONAR_TOKEN" \
   -e CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml \
@@ -26,4 +26,5 @@ docker run -d \
   -e JENKINS_OPTS="--prefix=/jenkins" \
   -v jenkins_home:/var/jenkins_home \
   -v /var/run/docker.sock:/var/run/docker.sock \
+  --group-add $(getent group docker | cut -d: -f3) \
   my-jenkins
