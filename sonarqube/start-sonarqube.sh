@@ -22,3 +22,4 @@ else
     -v sonarqube_extensions:/opt/sonarqube/extensions \
     -v sonarqube_logs:/opt/sonarqube/logs \
     sonarqube:lts
+fi

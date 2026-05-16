@@ -18,3 +18,4 @@ else
     -v "$SCRIPT_DIR/html:/var/www/html:ro" \
     -v jenkins_home:/var/jenkins_home:ro \
     nginx:alpine
+fi
