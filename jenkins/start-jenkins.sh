@@ -1,3 +1,4 @@
+CONTAINER_NAME="jenkins"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TOKEN_FILE="$SCRIPT_DIR/../sonarqube/token.txt"
 
@@ -12,19 +13,24 @@ if [ -z "${SONAR_TOKEN:-}" ]; then
 fi
 
 echo "== Start Jenkins =="
-docker rm -f jenkins >/dev/null 2>&1 || true
-docker run -d \
-  --name jenkins \
-  --network infra-net \
-  -p 127.0.0.1:8080:8080 \
-  --memory=3g \
-  --memory-swap=3g \
-  --env-file "$SCRIPT_DIR/../.env" \
-  -e SONAR_TOKEN="$SONAR_TOKEN" \
-  -e CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml \
-  -e JAVA_OPTS="-Xms512m -Xmx768m -Djenkins.install.runSetupWizard=false" \
-  -e JENKINS_OPTS="--prefix=/jenkins" \
-  -v jenkins_home:/var/jenkins_home \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  --group-add $(getent group docker | cut -d: -f3) \
-  my-jenkins
+if docker ps -a --format '{{.Names}}' | grep -Eq "^${CONTAINER_NAME}\$"; then
+  echo "Existing container will be started"
+  docker start ${CONTAINER_NAME}
+else
+  echo "New container will be created"
+  docker run -d \
+    --name jenkins \
+    --restart unless-stopped \
+    --network infra-net \
+    -p 127.0.0.1:8080:8080 \
+    --memory=3g \
+    --memory-swap=3g \
+    --env-file "$SCRIPT_DIR/../.env" \
+    -e SONAR_TOKEN="$SONAR_TOKEN" \
+    -e CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml \
+    -e JAVA_OPTS="-Xms512m -Xmx768m -Djenkins.install.runSetupWizard=false" \
+    -e JENKINS_OPTS="--prefix=/jenkins" \
+    -v jenkins_home:/var/jenkins_home \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    --group-add $(getent group docker | cut -d: -f3) \
+    my-jenkins
