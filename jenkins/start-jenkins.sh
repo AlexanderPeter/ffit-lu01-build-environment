@@ -13,7 +13,7 @@ if [ -z "${SONAR_TOKEN:-}" ]; then
 fi
 
 echo "== Start Jenkins =="
-if docker ps -a --format '{{.Names}}' | grep -Eq "^${CONTAINER_NAME}\$"; then
+if docker ps -a --format '{{.Names}}' | grep -Eq "^${CONTAINER_NAME}$"; then
   echo "Existing container will be started"
   docker start ${CONTAINER_NAME}
 else
@@ -27,7 +27,6 @@ else
     --memory-swap=3g \
     --env-file "$SCRIPT_DIR/../.env" \
     -e SONAR_TOKEN="$SONAR_TOKEN" \
-    -e CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml \
     -e JAVA_OPTS="-Xms512m -Xmx768m -Djenkins.install.runSetupWizard=false" \
     -e JENKINS_OPTS="--prefix=/jenkins" \
     -v jenkins_home:/var/jenkins_home \
